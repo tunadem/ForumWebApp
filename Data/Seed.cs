@@ -15,27 +15,32 @@ public class Seed
             var studio1 = new Studio
             {
                 Name = "EA",
-                Address = new Address { City = "California", Country = "USA" }
+                Address = new Address { City = "California", Country = "USA" },
+                Image = "https://avatars.fastly.steamstatic.com/618cc2a46fad78ed1259df505c2de5bb4d806532_full.jpg"
             };
             var studio2 = new Studio
             {
                 Name = "Valve",
-                Address = new Address { City = "Seattle", Country = "USA" }
+                Address = new Address { City = "Seattle", Country = "USA" },
+                Image = "https://avatars.fastly.steamstatic.com/7ba781b5f0b8a99d4cc0b0b0dcaa22df73db7db2_full.jpg"
             };
             var studio3 = new Studio
             {
-                Name = "Scottgames",
-                Address = new Address { City = "Texas", Country = "USA" }
+                Name = "SteelWool",
+                Address = new Address { City = "Texas", Country = "USA" },
+                Image = "https://avatars.fastly.steamstatic.com/3b6c73ee1109fb1a9f555b9163987701ad20ab86_full.jpg"
             };
             var studio4 = new Studio
             {
                 Name = "11 Bit Studios",
-                Address = new Address { City = "Warsaw", Country = "Poland" }
+                Address = new Address { City = "Warsaw", Country = "Poland" },
+                Image = "https://avatars.fastly.steamstatic.com/ec8f3d00d38cbdf1a6e10ee881e89bfaa0739bba_full.jpg"
             };
             var studio5 = new Studio
             {
-                Name = "Treyarch ",
-                Address = new Address { City = "Los Angeles", Country = "USA" }
+                Name = "Activision",
+                Address = new Address { City = "Los Angeles", Country = "USA" },
+                Image = "https://avatars.fastly.steamstatic.com/751c4faad6133699315ca7d4ae03293cd3abbe49_full.jpg"
             };
 
             context.Studios.AddRange(studio1, studio2, studio3, studio4, studio5);
@@ -45,16 +50,16 @@ public class Seed
         if (!context.Categories.Any())
         {
             context.Categories.AddRange(
-                new Category { Name = "Action",Image = "" },
-                new Category { Name = "Strategy", Image = "" },
-                new Category { Name = "RPG", Image = "" },
-                new Category { Name = "Horror", Image = "" },
-                new Category { Name = "FPS", Image = "" },
-                new Category { Name = "Adventure", Image = "" },
-                new Category { Name = "Simulation", Image = "" },
-                new Category { Name = "Singleplayer", Image = "" },
-                new Category { Name = "Co-op", Image = "" },
-                new Category { Name = "Multiplayer", Image = "" }
+                new Category { Name = "Action",Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/rogue_like_rogue_lite?cc=us&l=english" },
+                new Category { Name = "Strategy", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/science_fiction?cc=us&l=english" },
+                new Category { Name = "RPG", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/rpg?cc=us&l=english" },
+                new Category { Name = "Horror", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/horror?cc=us&l=english" },
+                new Category { Name = "FPS", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/survival?cc=us&l=english" },
+                new Category { Name = "Adventure", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/adventure?cc=us&l=english" },
+                new Category { Name = "Simulation", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/simulation?cc=us&l=english" },
+                new Category { Name = "Singleplayer", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/story_rich?cc=us&l=english" },
+                new Category { Name = "Co-op", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/casual?cc=us&l=english" },
+                new Category { Name = "Multiplayer", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/sports?cc=us&l=english" }
             );
             context.SaveChanges();
         }
@@ -63,9 +68,9 @@ public class Seed
         {
             var valveStudio = context.Studios.FirstOrDefault(s => s.Name == "Valve");
             var EAStudio = context.Studios.FirstOrDefault(s => s.Name == "EA");
-            var scottGamesStudio = context.Studios.FirstOrDefault(s => s.Name == "ScottGames");
+            var steelWoolStudio = context.Studios.FirstOrDefault(s => s.Name == "SteelWool");
             var bitStudio = context.Studios.FirstOrDefault(s => s.Name == "11 Bit Studios");
-            var treyarchStudio = context.Studios.FirstOrDefault(s => s.Name == "Treyarch");
+            var activisionStudio = context.Studios.FirstOrDefault(s => s.Name == "Activision");
 
             var actionCategory = context.Categories.FirstOrDefault(c => c.Name == "Action");
             var strategyCategory = context.Categories.FirstOrDefault(c => c.Name == "Strategy");
@@ -146,7 +151,7 @@ public class Seed
                 Stars = 4.3F,
                 Date = new DateTime(2014, 8, 8),
                 Description = "A legendary Horror game.",
-                Studio = scottGamesStudio,
+                Studio = steelWoolStudio,
                 ProductCategories = new List<ProductCategory>()
                 {
                     new ProductCategory { Category = HorrorCategory},
@@ -160,7 +165,7 @@ public class Seed
                 Stars = 4.1F,
                 Date = new DateTime(2014, 10, 11),
                 Description = "A legendary Horror game.",
-                Studio = scottGamesStudio,
+                Studio = steelWoolStudio,
                 ProductCategories = new List<ProductCategory>()
                 {
                     new ProductCategory { Category = HorrorCategory},
@@ -174,7 +179,7 @@ public class Seed
                 Stars = 4.5F,
                 Date = new DateTime(2019, 5, 28),
                 Description = "A legendary Horror game.",
-                Studio = scottGamesStudio,
+                Studio = steelWoolStudio,
                 ProductCategories = new List<ProductCategory>()
                 {
                     new ProductCategory { Category = HorrorCategory},
@@ -220,7 +225,7 @@ public class Seed
                 Stars = 4.5F,
                 Date = new DateTime(2012, 11, 11),
                 Description = "A legendary RPG game.",
-                Studio = treyarchStudio,
+                Studio = activisionStudio,
                 ProductCategories = new List<ProductCategory>()
                 {
                     new ProductCategory { Category = actionCategory },
@@ -235,7 +240,7 @@ public class Seed
                 Stars = 4.5F,
                 Date = new DateTime(2019, 10, 24),
                 Description = "A legendary RPG game.",
-                Studio = treyarchStudio,
+                Studio = activisionStudio,
                 ProductCategories = new List<ProductCategory>()
                 {
                     new ProductCategory { Category = actionCategory },

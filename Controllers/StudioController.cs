@@ -1,4 +1,5 @@
 ﻿using ForumWebApp.Data;
+using ForumWebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumWebApp.Controllers
@@ -13,7 +14,7 @@ namespace ForumWebApp.Controllers
         }
         public IActionResult Index()
         {
-            var studios = _context.Studios.ToList();
+            List<Studio> studios = _context.Studios.ToList();
             return View(studios);
         }
     }
