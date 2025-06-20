@@ -1,12 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ForumWebApp.Data;
+using ForumWebApp.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ForumWebApp.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly AppDbContext _context;
+
+        public ProductController(AppDbContext context)
+        {
+            _context = context;
+        }
         public IActionResult Index()
         {
-            return View();
+            List<Product> products = _context.Products.ToList();
+            return View(products);
         }
     }
 }

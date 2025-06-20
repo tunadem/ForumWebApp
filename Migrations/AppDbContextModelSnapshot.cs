@@ -65,6 +65,9 @@ namespace ForumWebApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -183,14 +186,15 @@ namespace ForumWebApp.Migrations
                     b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique()
-                        .HasFilter("[AddressId] IS NOT NULL");
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Studios");
                 });
@@ -256,8 +260,8 @@ namespace ForumWebApp.Migrations
             modelBuilder.Entity("ForumWebApp.Models.Studio", b =>
                 {
                     b.HasOne("ForumWebApp.Models.Address", "Address")
-                        .WithOne()
-                        .HasForeignKey("ForumWebApp.Models.Studio", "AddressId");
+                        .WithMany()
+                        .HasForeignKey("AddressId");
 
                     b.Navigation("Address");
                 });

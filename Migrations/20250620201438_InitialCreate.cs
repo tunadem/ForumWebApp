@@ -44,7 +44,8 @@ namespace ForumWebApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,6 +59,7 @@ namespace ForumWebApp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AddressId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -194,9 +196,7 @@ namespace ForumWebApp.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Studios_AddressId",
                 table: "Studios",
-                column: "AddressId",
-                unique: true,
-                filter: "[AddressId] IS NOT NULL");
+                column: "AddressId");
         }
 
         /// <inheritdoc />
