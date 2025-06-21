@@ -35,7 +35,7 @@
                                         <p class="card-text">@item.Name</p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Info</button>
+                                                <a asp-controller="studio" asp-action="Detail" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">Info</a>
                                             </div>
                                             <small class="text-muted">Loc</small>
                                         </div>

@@ -15,9 +15,9 @@
             <!-- Post meta content-->
             <div class="text-muted fst-italic mb-1">Released on @Model.Date.ToString("MMMM dd, yyyy", new System.Globalization.CultureInfo("en-EN"))</div>
 
-            @foreach (var item in Model.ProductCategories)
+            @foreach (var item in @Model.ProductCategories)
             {
-                <a class="badge bg-secondary text-decoration-none link-light" href="#!">@item.Category.Name</a>
+                <a class="badge bg-secondary text-decoration-none link-light" href="@Url.Action("Detail", "Category", new { id = item.Category.Id })">@item.Category.Name</a>
                 
             }
         </header>
