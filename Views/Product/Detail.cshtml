@@ -1,4 +1,5 @@
-﻿@model Product
+﻿@model ForumWebApp.ViewModels.ProductDetailViewModel
+
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -10,23 +11,23 @@
         <!-- Post header-->
         <header class="mb-4">
             <!-- Post title-->
-            <h1 class="fw-bolder mb-1"> @Model.Name</h1>
-            <h4 class="fw-bolder mb-1 mt-1">@Model.Stars *</h4>
+            <h1 class="fw-bolder mb-1"> @Model.Product.Name</h1>
+            <h4 class="fw-bolder mb-1 mt-1">@Model.Product.Stars *</h4>
             <!-- Post meta content-->
-            <div class="text-muted fst-italic mb-1">Released on @Model.Date.ToString("MMMM dd, yyyy", new System.Globalization.CultureInfo("en-EN"))</div>
+            <div class="text-muted fst-italic mb-1">Released on @Model.Product.Date.ToString("MMMM dd, yyyy", new System.Globalization.CultureInfo("en-EN"))</div>
 
-            @foreach (var item in @Model.ProductCategories)
+            @foreach (var item in @Model.Product.ProductCategories)
             {
                 <a class="badge bg-secondary text-decoration-none link-light" href="@Url.Action("Detail", "Category", new { id = item.Category.Id })">@item.Category.Name</a>
                 
             }
         </header>
         <!-- Preview image figure-->
-        <figure class="mb-4"><img class="img-fluid rounded" src="@Model.Image" alt="..."></figure>
+        <figure class="mb-4"><img class="img-fluid rounded" src="@Model.Product.Image" alt="..."></figure>
         <!-- Post content-->
         <section class="mb-5">
             <h2 class="fw-bolder mb-3 mt-1">@Model.Studio.Name</h2>
-            <p class="fs-5 mb-4">@Model.Description</p>
+            <p class="fs-5 mb-4">@Model.Product.Description</p>
         </section>
     </article>
     <!-- Comments section-->

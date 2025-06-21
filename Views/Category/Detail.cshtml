@@ -1,4 +1,4 @@
-﻿@model Category
+﻿@model ForumWebApp.ViewModels.CategoryDetailViewModel
 @{
     ViewData["Title"] = "Categories";
 
@@ -7,13 +7,13 @@
 <section class="hero">
     <div class="content">
         <fieldset>
-            <legend>@Model.Name</legend>
+            <legend>@Model.Category.Name</legend>
 
             <div class="album py-5 bg-white">
                 <div class="container">
 
                     <div class="row">
-                         @foreach (var item in Model.ProductCategories)
+                        @foreach (var item in Model.Category.ProductCategories)
                         {
                             <div class="col-md-3">
                                 <div class="card mb-4 box-shadow">

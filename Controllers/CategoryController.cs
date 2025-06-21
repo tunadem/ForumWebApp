@@ -1,5 +1,8 @@
-﻿using ForumWebApp.Data;
+﻿using AspNetCoreGeneratedDocument;
+using ForumWebApp.Data;
+using ForumWebApp.Interfaces;
 using ForumWebApp.Models;
+using ForumWebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,21 +10,34 @@ namespace ForumWebApp.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(AppDbContext context)
+        public CategoryController(ICategoryRepository categoryRepository)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Category> categories = _context.Categories.ToList();
+            IEnumerable<Category> categories = await _categoryRepository.GetAllAsync();
             return View(categories);
         }
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            Category category = _context.Categories.Include(a=> a.ProductCategories).ThenInclude(ac=> ac.Product).SingleOrDefault(p => p.Id == id);
-            return View(category);
+            var category = await _categoryRepository.GetByIdAsync(id);
+            if (category == null) return NotFound();
+
+            var products = await _categoryRepository.GetProductsByCategoryAsync(id);
+            
+
+            var viewModel = new CategoryDetailViewModel
+            {
+                Category = category,
+                Products = products,
+
+            };
+
+            return View(viewModel);
         }
+
     }
 }

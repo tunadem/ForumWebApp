@@ -5,6 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ForumWebApp.Interfaces.ICategoryRepository, ForumWebApp.Repository.CategoryRepository>();
+builder.Services.AddScoped<ForumWebApp.Interfaces.IProductRepository, ForumWebApp.Repository.ProductRepository>();
+builder.Services.AddScoped<ForumWebApp.Interfaces.IStudioRepository, ForumWebApp.Repository.StudioRepository>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

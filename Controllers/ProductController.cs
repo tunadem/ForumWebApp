@@ -1,5 +1,8 @@
 ﻿using ForumWebApp.Data;
+using ForumWebApp.Interfaces;
 using ForumWebApp.Models;
+using ForumWebApp.Repository;
+using ForumWebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,21 +10,32 @@ namespace ForumWebApp.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IProductRepository _productRepository;
 
-        public ProductController(AppDbContext context)
+        public ProductController(IProductRepository productRepository)
         {
-            _context = context;
+            _productRepository = productRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Product> products = _context.Products.ToList();
+            IEnumerable<Product> products = await _productRepository.GetAll();
             return View(products);
         }
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            Product product = _context.Products.Include(a=> a.Studio).Include(p => p.ProductCategories).ThenInclude(pc => pc.Category).SingleOrDefault(p => p.Id == id);
-            return View(product);
+            var product = await _productRepository.GetByIdAsync(id);
+            if (product == null) return NotFound();
+
+            var categories = await _productRepository.GetCategoriesByProductAsync(id);
+            var studio = await _productRepository.GetStudioByProductAsync(id);
+
+            var viewModel = new ProductDetailViewModel
+            {
+                Categories = categories,
+                Product = product,
+                Studio = studio
+            };
+            return View(viewModel);
         }
     }
 }
