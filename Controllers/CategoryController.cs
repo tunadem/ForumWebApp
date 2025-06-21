@@ -1,6 +1,7 @@
 ﻿using ForumWebApp.Data;
 using ForumWebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ForumWebApp.Controllers
 {
@@ -19,7 +20,7 @@ namespace ForumWebApp.Controllers
         }
         public IActionResult Detail(int id)
         {
-            Category category = _context.Categories.SingleOrDefault(p => p.Id == id);
+            Category category = _context.Categories.Include(a=> a.ProductCategories).ThenInclude(ac=> ac.Product).SingleOrDefault(p => p.Id == id);
             return View(category);
         }
     }

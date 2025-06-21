@@ -1,6 +1,7 @@
 ﻿using ForumWebApp.Data;
 using ForumWebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ForumWebApp.Controllers
 {
@@ -19,7 +20,7 @@ namespace ForumWebApp.Controllers
         }
         public IActionResult Detail(int id)
         {
-            Studio studio = _context.Studios.SingleOrDefault(p => p.Id == id);
+            Studio studio = _context.Studios.Include(p=> p.Address).Include(p=> p.Products).SingleOrDefault(p => p.Id == id);
             return View(studio);
         }
     }

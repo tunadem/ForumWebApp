@@ -1,6 +1,7 @@
 ﻿using ForumWebApp.Data;
 using ForumWebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ForumWebApp.Controllers
 {
@@ -19,7 +20,7 @@ namespace ForumWebApp.Controllers
         }
         public IActionResult Detail(int id)
         {
-            Product product = _context.Products.SingleOrDefault(p => p.Id == id);
+            Product product = _context.Products.Include(a=> a.Studio).Include(p => p.ProductCategories).ThenInclude(pc => pc.Category).SingleOrDefault(p => p.Id == id);
             return View(product);
         }
     }
