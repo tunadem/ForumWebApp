@@ -1,0 +1,69 @@
+﻿@model Studio
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="col-lg-8">
+    <!-- Post content-->
+    <article>
+        <!-- Post header-->
+        <header class="mb-4">
+            <!-- Post title-->
+            <h1 class="fw-bolder mb-1"> @Model.Name</h1>
+            <h4 class="fw-bolder mb-1 mt-1">*</h4>
+            <!-- Post meta content-->
+            <div class="text-muted fst-italic mb-1">a</div>
+        </header>
+        <!-- Preview image figure-->
+        <figure class="mb-4"><img class="img-fluid rounded" src="@Model.Image" alt="..."></figure>
+        <!-- Post content-->
+        <section class="mb-5">
+            <h2 class="fw-bolder mb-3 mt-1">Studio info</h2>
+            <p class="fs-5 mb-4">s</p>
+        </section>
+
+    </article>
+    <!-- Comments section-->
+    @* <section class="mb-5">
+        <div class="card bg-light">
+            <div class="card-body">
+                <div class="row">
+                                             @foreach (var item in Model)
+                        {
+                            <div class="col-md-3">
+                                <div class="card mb-4 box-shadow">
+                                    <img class="card-img-top" src="@item.Image" alt="Card image cap">
+                                    <div class="card-body">
+                                        <p class="card-text">@item.Name</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary">Games</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        } 
+                </div>
+            </div>
+        </div>
+        </fieldset>
+</div>
+</section> *@
+
+@* @section Scripts {
+    <script>
+
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/style.css" />
+}
+            </div>
+        </div>
+    </section>
+</div> *@
