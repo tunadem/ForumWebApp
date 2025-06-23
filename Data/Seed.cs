@@ -270,36 +270,73 @@ public class Seed
 
         if (!context.AppUsers.Any())
         {
-            context.AppUsers.Add(new AppUser
-            {
-                UserName = "Gordon Freeman"
-            });
+            context.AppUsers.AddRange(
+                new AppUser { UserName = "Admin",ImageUrl = "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/236390/8c984c7b58e5faceffae28155c1e9b07a92f9a38.gif" },
+                new AppUser { UserName = "Borga", ImageUrl = "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/1940340/8a6bf2dfc491be809c2fccf61f297d6f98ac049d.gif" },
+                new AppUser { UserName = "Dağlar", ImageUrl = "" },
+                new AppUser { UserName = "Boran", ImageUrl = "" },
+                new AppUser { UserName = "Efe", ImageUrl = "" }
+                );
+
             context.SaveChanges();
         }
 
         if (!context.Comments.Any() && !context.Reviews.Any())
         {
-            var user = context.AppUsers.First();
-            var product = context.Products.First();
+            var users = context.AppUsers.Take(3).ToList();
 
-            var comment = new Comment
+            var product1 = context.Products.First();
+            var product2 = context.Products.Skip(1).First();
+
+            var comment1 = new Comment
             {
-                Title = "Amazing Game",
-                Content = "Still holds up!",
-                AppUserId = user.Id 
+                Title = "Fantastic Game!",
+                Content = "Loved every minute.",
+                AppUserId = users[0].Id
             };
 
-            context.Comments.Add(comment);
-            context.SaveChanges(); 
-
-            var review = new Review
+            var comment2 = new Comment
             {
-                CommentId = comment.Id,
-                ProductId = product.Id
+                Title = "Pretty good",
+                Content = "Not bad overall.",
+                AppUserId = users[1].Id
             };
 
-            context.Reviews.Add(review);
+            context.Comments.AddRange(comment1, comment2);
+            context.SaveChanges();
+
+            var review1 = new Review
+            {
+                CommentId = comment1.Id,
+                ProductId = product1.Id
+            };
+
+            var review2 = new Review
+            {
+                CommentId = comment2.Id,
+                ProductId = product1.Id
+            };
+
+            var comment3 = new Comment
+            {
+                Title = "Needs improvement",
+                Content = "Had a few bugs.",
+                AppUserId = users[2].Id
+            };
+
+            context.Comments.Add(comment3);
+            context.SaveChanges();
+
+            var review3 = new Review
+            {
+                CommentId = comment3.Id,
+                ProductId = product2.Id
+            };
+
+            context.Reviews.AddRange(review1, review2, review3);
             context.SaveChanges();
         }
+
     }
 }
+

@@ -19,7 +19,7 @@
                                 <div class="card mb-4 box-shadow">
                                     <img class="card-img-top" src="@item.Product.Image" alt="Card image cap">
                                     <div class="card-body">
-                                        <p class="card-text">@item.Product</p>
+                                        <p class="card-text">@item.Product.Name</p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="btn-group">
                                                 <a asp-controller ="product" asp-action="Detail" asp-route-id="@item.Product.Id" type="button" class="btn btn-sm btn-outline-secondary">Review</a>

@@ -2,6 +2,7 @@
 using ForumWebApp.Interfaces;
 using ForumWebApp.Models;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ForumWebApp.Repository
 {
@@ -41,6 +42,26 @@ namespace ForumWebApp.Repository
                 .Include(p => p.ProductCategories)
                     .ThenInclude(pc => pc.Product)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Comment>> GetCommentsByProductAsync(int productId)
+        {
+            return await _context.Reviews
+                .Where(r => r.ProductId == productId)
+                .Include(r => r.Comment)
+                .ThenInclude(c=> c.AppUser)
+                .Select(r => r.Comment)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetSearchAsync(string query)
+        {
+            return await _context.Products
+    .Where(p => p.Name.Contains(query) || p.Description.Contains(query))
+    .Include(p => p.Studio)
+    .Include(p => p.ProductCategories)
+        .ThenInclude(pc => pc.Category)
+    .ToListAsync();
         }
 
         public async Task<Studio?> GetStudioByProductAsync(int productId)

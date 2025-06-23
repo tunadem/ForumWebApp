@@ -16,11 +16,22 @@ namespace ForumWebApp.Controllers
         {
             _productRepository = productRepository;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? query)
         {
-            IEnumerable<Product> products = await _productRepository.GetAll();
+            IEnumerable<Product> products;
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                products = await _productRepository.GetSearchAsync(query);
+            }
+            else
+            {
+                products = await _productRepository.GetAll();
+            }
+
             return View(products);
         }
+
         public async Task<IActionResult> Detail(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
@@ -28,12 +39,14 @@ namespace ForumWebApp.Controllers
 
             var categories = await _productRepository.GetCategoriesByProductAsync(id);
             var studio = await _productRepository.GetStudioByProductAsync(id);
+            var comments = await _productRepository.GetCommentsByProductAsync(id);
 
             var viewModel = new ProductDetailViewModel
             {
                 Categories = categories,
                 Product = product,
-                Studio = studio
+                Studio = studio,
+                Comments = comments
             };
             return View(viewModel);
         }

@@ -1,9 +1,11 @@
 ﻿using ForumWebApp.Data;
 using ForumWebApp.Interfaces;
 using ForumWebApp.Models;
+using ForumWebApp.Repository;
 using ForumWebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ForumWebApp.Controllers
 {
@@ -17,9 +19,19 @@ namespace ForumWebApp.Controllers
 
             _studioRepository = studioRepository;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? query)
         {
-            IEnumerable<Studio> studios = await _studioRepository.GetAllAsync();
+            IEnumerable<Studio> studios;
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                studios = await _studioRepository.GetSearchAsync(query);
+            }
+            else
+            {
+                studios = await _studioRepository.GetAllAsync();
+            }
+
             return View(studios);
         }
         public async Task<IActionResult> Detail(int id)

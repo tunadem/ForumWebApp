@@ -57,7 +57,14 @@ namespace ForumWebApp.Repository
                 .ToListAsync();
         }
 
-
+        public async Task<IEnumerable<Studio>> GetSearchAsync(string query)
+        {
+            return await _context.Studios
+                .Where(p => p.Name.Contains(query))
+                .Include(p => p.Products)
+                .ToListAsync();
+        }
+        
 
         public bool Save()
         {

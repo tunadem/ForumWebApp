@@ -7,5 +7,6 @@ namespace ForumWebApp.ViewModels
         public Product Product { get; set; }
         public IEnumerable<Category> Categories { get; set; }
         public Studio Studio { get; set; }
+        public IEnumerable<Comment> Comments { get; set; }
     }
 }

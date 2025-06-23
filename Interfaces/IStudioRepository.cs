@@ -6,6 +6,7 @@ namespace ForumWebApp.Interfaces
     {
         Task<IEnumerable<Studio>> GetAllAsync();
         Task<Studio> GetByIdAsync(int id);
+        Task<IEnumerable<Studio>> GetSearchAsync(string search);
         Task<Address> GetAddressAsync(int id);
         Task<IEnumerable<Product>> GetProductsByStudioAsync(int studioId);
         bool Add(Studio studio);
