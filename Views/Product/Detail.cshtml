@@ -43,18 +43,55 @@
                 <!-- Loop through comments -->
                 @foreach (var comment in @Model.Comments)
                 {
-                    <div class="d-flex mb-4">
+                    <div class="d-flex mb-4" id="comment-@comment.Id">
                         <img class="rounded-circle" src="@comment.AppUser.ImageUrl" alt="..." style="width: 70px; height: 70px;">
-                        <div class="ms-3">
-                            <div class="fw-bold">@comment.AppUser.UserName</div>
-                            <div class="fw-semibold">@comment.Title</div>
-                            @comment.Content
+                        <div class="ms-3 w-100">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="fw-bold">@comment.AppUser.UserName</div>
+                                    <div class="fw-semibold">@comment.Title</div>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@comment.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                        •••
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuButton-@comment.Id">
+                                        <li><button class="dropdown-item" onclick="enableEdit(@comment.Id)">Edit</button></li>
+                                        <li><a class="dropdown-item" href="/Comments/Delete/@comment.Id">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Static comment text -->
+                            <div id="comment-content-@comment.Id">@comment.Content</div>
+
+                            <!-- Hidden form for editing -->
+                            <form id="edit-form-@comment.Id" method="post" action="/Comments/Edit/@comment.Id" class="d-none mt-2">
+                                <textarea name="Content" class="form-control mb-2">@comment.Content</textarea>
+                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="cancelEdit(@comment.Id)">Cancel</button>
+                            </form>
                         </div>
                     </div>
                 }
+
+
             </div>
         </div>
     </section>
 
 
 </div>
+@section Scripts {
+    <script>
+        function enableEdit(id) {
+            document.getElementById(`comment-content-${id}`).style.display = "none";
+            document.getElementById(`edit-form-${id}`).classList.remove("d-none");
+        }
+
+        function cancelEdit(id) {
+            document.getElementById(`comment-content-${id}`).style.display = "block";
+            document.getElementById(`edit-form-${id}`).classList.add("d-none");
+        }
+    </script>
+}

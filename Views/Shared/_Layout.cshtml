@@ -4,42 +4,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     @RenderSection("Styles", required: false)
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ForumWebApp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ForumWebApp.styles.css" asp-append-version="true" />
     <style>
         html, body {
-            height: auto;
-            min-height: 100%;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
             display: flex;
-            flex-direction: row;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #343a40;
+            color: white;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-x: hidden;
         }
     </style>
 </head>
-<body class="d-flex min-vh-100">
-    
+<body>
     <!-- Sidebar -->
-    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+    <div class="sidebar d-flex flex-column p-3">
+        <a href="/" class="d-flex align-items-center mb-4 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-4">Sidebar</span>
         </a>
         <hr>
-        <ul class="nav nav-pills flex-column mb-auto dropdown">
+        <ul class="nav nav-pills flex-column mb-auto">
+            @{
+                var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+            }
             <li class="nav-item">
-                <a href="/" class="nav-link active text-white" aria-current="page">
+                <a href="/" class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
                     Home
                 </a>
             </li>
-            <li><a  href="/product" class="nav-link text-white">Games</a></li>
-            <li><a href="/studio" class="nav-link text-white">Companies</a></li>
-            <li><a href="/category" class="nav-link text-white dropdown-item">Categories</a></li>
+            <li>
+                <a href="/product" class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Product" ? "active" : "")">
+                    Games
+                </a>
+            </li>
+            <li>
+                <a href="/studio" class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Studio" ? "active" : "")">
+                    Companies
+                </a>
+            </li>
+            <li>
+                <a href="/category" class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Category" ? "active" : "")">
+                    Categories
+                </a>
+            </li>
         </ul>
         <hr>
         <div class="dropdown">
@@ -58,7 +92,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-grow-1 p-4">
+    <div class="main-content">
         @RenderBody()
     </div>
 

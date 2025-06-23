@@ -8,7 +8,9 @@
 body, html {
     height: 100%;
     background-color: #fff;
+    font-family: 'Poppins', sans-serif;
 }
+
 
 .hero {
     height: 100vh;
@@ -67,3 +69,4 @@ legend {
     justify-content: center;
     cursor: pointer;
 }
+
