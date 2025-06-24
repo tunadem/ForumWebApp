@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\css\login.css" />
     <None Include="wwwroot\css\style.css" />
   </ItemGroup>
 
