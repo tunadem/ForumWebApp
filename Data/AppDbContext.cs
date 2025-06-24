@@ -1,9 +1,10 @@
 ﻿using ForumWebApp.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ForumWebApp.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -22,7 +23,6 @@ namespace ForumWebApp.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // many to many 
             modelBuilder.Entity<ProductCategory>()
                 .HasKey(pc => new { pc.ProductId, pc.CategoryId });
 
@@ -35,6 +35,11 @@ namespace ForumWebApp.Data
                 .HasOne(pc => pc.Category)
                 .WithMany(c => c.ProductCategories)
                 .HasForeignKey(pc => pc.CategoryId);
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Review)
+                .WithOne(r => r.Comment)
+                .HasForeignKey<Review>(r => r.CommentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

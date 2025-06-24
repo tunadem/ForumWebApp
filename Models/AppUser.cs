@@ -1,9 +1,9 @@
-﻿namespace ForumWebApp.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace ForumWebApp.Models
 {
-    public class AppUser //: IdentitiyUser
+    public class AppUser : IdentityUser
     {
-        public int Id { get; set; }
-        public string UserName { get; set; }
         public string? ImageUrl { get; set; }
     }
 }

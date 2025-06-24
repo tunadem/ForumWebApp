@@ -1,87 +1,117 @@
 ﻿@model ForumWebApp.ViewModels.ProductDetailViewModel
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
+    ViewData["Title"] = Model?.Product?.Name ?? "Product Detail";
 }
-<div class="col-lg-8">
-    <!-- Post content-->
-    <article>
-        <!-- Post header-->
-        <header class="mb-4">
-            <!-- Post title-->
-            <h1 class="fw-bolder mb-1"> @Model.Product.Name</h1>
-            <h4 class="fw-bolder mb-1 mt-1">@Model.Product.Stars *</h4>
-            <!-- Post meta content-->
-            <div class="text-muted fst-italic mb-1">Released on @Model.Product.Date.ToString("MMMM dd, yyyy", new System.Globalization.CultureInfo("en-EN"))</div>
 
-            @foreach (var item in @Model.Product.ProductCategories)
-            {
-                <a class="badge bg-secondary text-decoration-none link-light" href="@Url.Action("Detail", "Category", new { id = item.Category.Id })">@item.Category.Name</a>
-                
-            }
-        </header>
-        <!-- Preview image figure-->
-        <figure class="mb-4"><img class="img-fluid rounded" src="@Model.Product.Image" alt="..."></figure>
-        <!-- Post content-->
-        <section class="mb-5">
-            <h2 class="fw-bolder mb-3 mt-1">@Model.Studio.Name</h2>
-            <p class="fs-5 mb-4">@Model.Product.Description</p>
-        </section>
-    </article>
-    <!-- Comments section -->
-    <section class="mb-5">
-        <div class="card bg-light">
-            <div class="card-body">
-                <!-- Comment form -->
-                <form class="mb-4 d-flex" method="post" action="">
-                    <textarea class="form-control me-2" name="commentText" rows="3" placeholder="Join the discussion and leave a comment!" required></textarea>
-                    <button type="submit" class="btn btn-primary align-self-start">Post Review</button>
-                </form>
-
-                <!-- Loop through comments -->
-                @foreach (var comment in @Model.Comments)
-                {
-                    <div class="d-flex mb-4" id="comment-@comment.Id">
-                        <img class="rounded-circle" src="@comment.AppUser.ImageUrl" alt="..." style="width: 70px; height: 70px;">
-                        <div class="ms-3 w-100">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <div class="fw-bold">@comment.AppUser.UserName</div>
-                                    <div class="fw-semibold">@comment.Title</div>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@comment.Id" data-bs-toggle="dropdown" aria-expanded="false">
-                                        •••
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuButton-@comment.Id">
-                                        <li><button class="dropdown-item" onclick="enableEdit(@comment.Id)">Edit</button></li>
-                                        <li><a class="dropdown-item" href="/Comments/Delete/@comment.Id">Delete</a></li>
-                                    </ul>
-                                </div>
+<div class="container mt-5">
+    @if (Model?.Product == null)
+    {
+        <div class="alert alert-danger">Product not found.</div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <article>
+                    <header class="mb-4">
+                        <h1 class="fw-bolder mb-1">@Model.Product.Name</h1>
+                        <h4 class="fw-bolder mb-1 mt-1">@Model.Product.Stars *</h4>
+                        <div class="text-muted fst-italic mb-1">
+                            Released on @Model.Product.Date.ToString("MMMM dd, yyyy", new System.Globalization.CultureInfo("en-EN"))
+                        </div>
+                        @if (Model.Product.ProductCategories != null && Model.Product.ProductCategories.Any())
+                        {
+                            <div>
+                                @foreach (var item in Model.Product.ProductCategories)
+                                {
+                                    <a class="badge bg-secondary text-decoration-none link-light" href="@Url.Action("Detail", "Category", new { id = item.Category.Id })">@item.Category.Name</a>
+                                }
                             </div>
+                        }
+                    </header>
+                    <figure class="mb-4">
+                        <img class="img-fluid rounded" src="@Model.Product.Image" alt="@Model.Product.Name">
+                    </figure>
+                    <section class="mb-5">
+                        <h2 class="fw-bolder mb-3 mt-1">@Model.Studio?.Name</h2>
+                        <p class="fs-5 mb-4">@Model.Product.Description</p>
+                    </section>
+                </article>
+                <section class="mb-5">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <form asp-action="AddComment" asp-controller="Product" method="post">
+                                <input type="hidden" name="productId" value="@Model.Product.Id" />
 
-                            <!-- Static comment text -->
-                            <div id="comment-content-@comment.Id">@comment.Content</div>
+                                <!-- Title Input -->
+                                <input type="text" name="commentTitle" class="form-control mb-2" placeholder="Comment Title" required />
 
-                            <!-- Hidden form for editing -->
-                            <form id="edit-form-@comment.Id" method="post" action="/Comments/Edit/@comment.Id" class="d-none mt-2">
-                                <textarea name="Content" class="form-control mb-2">@comment.Content</textarea>
-                                <button type="submit" class="btn btn-sm btn-success">Save</button>
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="cancelEdit(@comment.Id)">Cancel</button>
+                                <!-- Content Textarea -->
+                                <textarea class="form-control me-2" name="commentText" rows="3" placeholder="Write your comment..." required></textarea>
+
+                                <button type="submit" class="btn btn-primary align-self-start mt-2">Post Review</button>
                             </form>
+
+
+
+                            @if (Model.Comments != null && Model.Comments.Any())
+                            {
+                                @foreach (var comment in Model.Comments)
+                                {
+                                    <div class="d-flex mb-4" id="comment-@comment.Id">
+                                        <img class="rounded-circle" src="@comment.AppUser.ImageUrl" alt="..." style="width: 70px; height: 70px;">
+                                        <div class="ms-3 w-100">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <div class="fw-bold">@comment.AppUser.UserName</div>
+                                                    <div class="fw-semibold">@comment.Title</div>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@comment.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        •••
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuButton-@comment.Id">
+                                                        <li><button class="dropdown-item" onclick="enableEdit(@comment.Id)">Edit</button></li>
+                                                        <form asp-action="DeleteComment" asp-controller="Product" method="post" style="display:inline;">
+                                                            <input type="hidden" name="id" value="@comment.Id" />
+                                                            <button type="submit" class="dropdown-item d-flex justify-content-center align-items-center"
+                                                                    style="background:none; border:none; width:100%; height:100%;">
+                                                                Delete
+                                                            </button>
+                                                        </form>
+
+
+
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div id="comment-content-@comment.Id">@comment.Content</div>
+                                            <form asp-action="EditComment" asp-controller="Product" method="post" id="edit-form-@comment.Id" class="d-none mt-2">
+    <input type="hidden" name="Id" value="@comment.Id" />
+    <input type="hidden" name="productId" value="@Model.Product.Id" />
+    <textarea name="Content" class="form-control mb-2">@comment.Content</textarea>
+    <button type="submit" class="btn btn-sm btn-success">Save</button>
+    <button type="button" class="btn btn-sm btn-secondary" onclick="cancelEdit(@comment.Id)">Cancel</button>
+</form>
+
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="text-center text-muted">No comments yet.</div>
+                            }
                         </div>
                     </div>
-                }
-
-
+                </section>
             </div>
         </div>
-    </section>
-
-
+    }
 </div>
+
 @section Scripts {
     <script>
         function enableEdit(id) {

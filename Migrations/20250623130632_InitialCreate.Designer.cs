@@ -4,6 +4,7 @@ using ForumWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ForumWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250623130632_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,6 +141,9 @@ namespace ForumWebApp.Migrations
 
                     b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AppUserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
@@ -426,7 +432,7 @@ namespace ForumWebApp.Migrations
             modelBuilder.Entity("ForumWebApp.Models.Review", b =>
                 {
                     b.HasOne("ForumWebApp.Models.Comment", "Comment")
-                        .WithOne("Review")
+                        .WithOne("Reviews")
                         .HasForeignKey("ForumWebApp.Models.Review", "CommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -509,7 +515,7 @@ namespace ForumWebApp.Migrations
 
             modelBuilder.Entity("ForumWebApp.Models.Comment", b =>
                 {
-                    b.Navigation("Review");
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("ForumWebApp.Models.Product", b =>

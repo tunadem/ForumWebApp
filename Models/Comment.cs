@@ -9,9 +9,8 @@ namespace ForumWebApp.Models
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Content { get; set; }
-        public int? AppUserId { get; set; }
-        //[ForeignKey("AppUser")]
+        public string? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
-        public Review? Reviews { get; set; }
+        public Review? Review { get; set; }
     }
 }

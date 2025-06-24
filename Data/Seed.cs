@@ -1,5 +1,6 @@
 ﻿using ForumWebApp.Data;
 using ForumWebApp.Models;
+using Microsoft.AspNetCore.Identity;
 
 public class Seed
 {
@@ -50,7 +51,7 @@ public class Seed
         if (!context.Categories.Any())
         {
             context.Categories.AddRange(
-                new Category { Name = "Action",Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/rogue_like_rogue_lite?cc=us&l=english" },
+                new Category { Name = "Action", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/rogue_like_rogue_lite?cc=us&l=english" },
                 new Category { Name = "Strategy", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/science_fiction?cc=us&l=english" },
                 new Category { Name = "RPG", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/rpg?cc=us&l=english" },
                 new Category { Name = "Horror", Image = "https://store.fastly.steamstatic.com/categories/homepageimage/category/horror?cc=us&l=english" },
@@ -268,22 +269,10 @@ public class Seed
             context.SaveChanges();
         }
 
-        if (!context.AppUsers.Any())
-        {
-            context.AppUsers.AddRange(
-                new AppUser { UserName = "Admin",ImageUrl = "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/236390/8c984c7b58e5faceffae28155c1e9b07a92f9a38.gif" },
-                new AppUser { UserName = "Borga", ImageUrl = "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/1940340/8a6bf2dfc491be809c2fccf61f297d6f98ac049d.gif" },
-                new AppUser { UserName = "Dağlar", ImageUrl = "" },
-                new AppUser { UserName = "Boran", ImageUrl = "" },
-                new AppUser { UserName = "Efe", ImageUrl = "" }
-                );
-
-            context.SaveChanges();
-        }
-
         if (!context.Comments.Any() && !context.Reviews.Any())
         {
-            var users = context.AppUsers.Take(3).ToList();
+            var user = context.AppUsers.FirstOrDefault();
+            if (user == null) return;
 
             var product1 = context.Products.First();
             var product2 = context.Products.Skip(1).First();
@@ -292,14 +281,14 @@ public class Seed
             {
                 Title = "Fantastic Game!",
                 Content = "Loved every minute.",
-                AppUserId = users[0].Id
+                AppUserId = user.Id 
             };
 
             var comment2 = new Comment
             {
                 Title = "Pretty good",
                 Content = "Not bad overall.",
-                AppUserId = users[1].Id
+                AppUserId = user.Id
             };
 
             context.Comments.AddRange(comment1, comment2);
@@ -321,7 +310,7 @@ public class Seed
             {
                 Title = "Needs improvement",
                 Content = "Had a few bugs.",
-                AppUserId = users[2].Id
+                AppUserId = user.Id
             };
 
             context.Comments.Add(comment3);
@@ -335,6 +324,54 @@ public class Seed
 
             context.Reviews.AddRange(review1, review2, review3);
             context.SaveChanges();
+        }
+    }
+
+         public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+    {
+        using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+        {
+            //Roles
+            var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            if (!await roleManager.RoleExistsAsync(UserRoles.User))
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+
+            //Users
+            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+            string adminUserEmail = "teddysmithdeveloper@gmail.com";
+
+            var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
+            if (adminUser == null)
+            {
+                var newAdminUser = new AppUser()
+                {
+                    UserName = "teddysmithdev",
+                    Email = adminUserEmail,
+                    EmailConfirmed = true,
+                    ImageUrl = "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/1940340/8a6bf2dfc491be809c2fccf61f297d6f98ac049d.gif"
+                };
+                await userManager.CreateAsync(newAdminUser, "Coding@1234?");
+                await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
+            }
+
+            string appUserEmail = "user@etickets.com";
+
+            var appUser = await userManager.FindByEmailAsync(appUserEmail);
+            if (appUser == null)
+            {
+                var newAppUser = new AppUser()
+                {
+                    UserName = "app-user",
+                    Email = appUserEmail,
+                    EmailConfirmed = true,
+                    ImageUrl = "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/236390/8c984c7b58e5faceffae28155c1e9b07a92f9a38.gif"
+                };
+                await userManager.CreateAsync(newAppUser, "Coding@1234?");
+                await userManager.AddToRoleAsync(newAppUser, UserRoles.User);
+            }
         }
 
     }

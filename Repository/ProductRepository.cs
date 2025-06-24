@@ -25,6 +25,30 @@ namespace ForumWebApp.Repository
             _context.Remove(product);
             return Save();
         }
+        public async Task AddCommentToProductAsync(int productId, string userId, string title, string content)
+        {
+            var comment = new Comment
+            {
+                Title = title,
+                Content = content,
+                AppUserId = userId
+            };
+
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            var review = new Review
+            {
+                CommentId = comment.Id,
+                ProductId = productId
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+        }
+
+
+
 
         public async Task<IEnumerable<Product>> GetAll()
         {
@@ -83,6 +107,11 @@ namespace ForumWebApp.Repository
         {
             _context.Update(product);
             return Save();
+        }
+
+        public Task DeleteCommentAsync(int productId, int userId, string title, string commentText)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,6 +3,7 @@ using ForumWebApp.Interfaces;
 using ForumWebApp.Models;
 using ForumWebApp.Repository;
 using ForumWebApp.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,12 +11,29 @@ namespace ForumWebApp.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly IAppUserRepository _userRepository;
+        private readonly ICommentRepository _commentRepository;
         private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IStudioRepository _studioRepository;
+        private readonly UserManager<AppUser> _userManager;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(
+            IProductRepository productRepository,
+            ICategoryRepository categoryRepository,
+            IStudioRepository studioRepository,
+            IAppUserRepository userRepository,
+            ICommentRepository commentRepository,
+            UserManager<AppUser> userManager)
         {
             _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
+            _studioRepository = studioRepository;
+            _userRepository = userRepository;
+            _commentRepository = commentRepository;
+            _userManager = userManager;
         }
+
         public async Task<IActionResult> Index(string? query)
         {
             IEnumerable<Product> products;
@@ -34,6 +52,7 @@ namespace ForumWebApp.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
+            
             var product = await _productRepository.GetByIdAsync(id);
             if (product == null) return NotFound();
 
@@ -50,5 +69,44 @@ namespace ForumWebApp.Controllers
             };
             return View(viewModel);
         }
+        [HttpPost]
+        public async Task<IActionResult> AddComment(int productId, string commentTitle, string commentText)
+        {
+            var user = await _userRepository.GetFirstAsync();
+            if (user == null) return Unauthorized();
+
+            await _productRepository.AddCommentToProductAsync(productId, user.Id, commentTitle, commentText);
+
+            return RedirectToAction("Detail", "Product", new { id = productId });
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var comment = await _commentRepository.GetByIdAsync(id);
+            if (comment == null) return NotFound();
+
+            var productId = comment.Review.ProductId;
+
+            await _commentRepository.DeleteAsync(id);
+
+            return RedirectToAction("Detail", "Product", new { id = productId });
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditComment(int id, string content, int productId)
+        {
+            await _commentRepository.EditAsync(id, null, content);
+            return RedirectToAction("Detail", "Product", new { id = productId });
+
+        }
+
+
+
+
+
+
+
+
     }
 }
