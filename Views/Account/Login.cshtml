@@ -1,79 +1,102 @@
 ﻿@using ForumWebApp.ViewModels
-@model LoginViewModel
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+@model ForumWebApp.ViewModels.LoginRegisterViewModel
+
 @{
-	ViewData["Title"] = "Login";
+    ViewData["Title"] = "Login / Register";
 }
 
 <a href="https://front.codes/" class="logo" target="_blank">
-	<img src="https://assets.codepen.io/1462889/fcy.png" alt="">
+    <img src="https://assets.codepen.io/1462889/fcy.png" alt="">
 </a>
 
 <div class="section">
-	<div class="container">
-		<div class="row full-height justify-content-center">
-			<div class="col-12 text-center align-self-center py-5">
-				<div class="section pb-5 pt-5 pt-sm-2 text-center">
-					<h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
-					<input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
-					<label for="reg-log"></label>
-					<div class="card-3d-wrap mx-auto">
-						<div class="card-3d-wrapper">
-							<div class="card-front">
-								<div class="center-wrap">
-									<div class="section text-center">
-										<h4 class="mb-4 pb-3">Log In</h4>
-										<form asp-controller="Account" asp-action="Login" method="post">
-											<div class="form-group">
-												<input asp-for="EmailAddress" class="form-style" placeholder="Your Email" autocomplete="off" />
-												<span asp-validation-for="EmailAddress" class="text-danger"></span>
-											</div>
-											<div class="form-group mt-2">
-												<input asp-for="Password" class="form-style" placeholder="Your Password" autocomplete="off" />
-												<span asp-validation-for="Password" class="text-danger"></span>
-											</div>
-											<button type="submit" class="btn mt-4">Submit</button>
-										</form>
+    <div class="container">
+        <div class="row full-height justify-content-center">
+            <div class="col-12 text-center align-self-center py-5">
+                <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                    <h6 class="mb-0 pb-3"><span>Log In</span><span>Sign Up</span></h6>
+                    <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+                    <label for="reg-log"></label>
+                    <div class="card-3d-wrap mx-auto">
+                        <div class="card-3d-wrapper">
+                            <!-- Login Side -->
+                            <div class="card-front">
+                                <div class="center-wrap">
+                                    <div class="section text-center">
+                                        <h4 class="mb-4 pb-3">Log In</h4>
+                                        <form asp-controller="Account" asp-action="Login" method="post">
+                                            <div class="form-group">
+                                                <input asp-for="LoginViewModel.EmailAddress" class="form-style" placeholder="Your Email" />
+                                                <span asp-validation-for="LoginViewModel.EmailAddress" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input asp-for="LoginViewModel.Password" class="form-style" placeholder="Your Password" />
+                                                <span asp-validation-for="LoginViewModel.Password" class="text-danger"></span>
+                                            </div>
+                                            <button type="submit" class="btn mt-4">Login</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
 
-								</div>
-							</div>
-							<div class="card-back">
-								<div class="center-wrap">
-									<div class="section text-center">
-										<h4 class="mb-4 pb-3">Sign Up</h4>
-										<div class="form-group">
-											<input type="text" name="logname" class="form-style" placeholder="Your Full Name" id="logname" autocomplete="off">
-											<i class="input-icon uil uil-user"></i>
-										</div>
-										<div class="form-group mt-2">
-											<input type="email" name="logemail" class="form-style" placeholder="Your Email" id="logemail" autocomplete="off">
-											<i class="input-icon uil uil-at"></i>
-										</div>
-										<div class="form-group mt-2">
-											<input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
-											<i class="input-icon uil uil-lock-alt"></i>
-										</div>
-										<a href="#" class="btn mt-4">submit</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                            <!-- Register Side -->
+                            <div class="card-back">
+                                <div class="center-wrap">
+                                    <div class="section text-center">
+                                        <h4 class="mb-4 pb-3">Sign Up</h4>
+
+                                        @if (!ViewData.ModelState.IsValid)
+                                        {
+                                            <div class="text-danger">
+                                                @foreach (var modelState in ViewData.ModelState.Values)
+                                                {
+                                                    foreach (var error in modelState.Errors)
+                                                    {
+                                                        <div>@error.ErrorMessage</div>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+
+                                        <form asp-controller="Account" asp-action="Register" method="post">
+                                            <div class="form-group">
+                                                <input asp-for="RegisterViewModel.UserName" class="form-style" placeholder="Your User Name" />
+                                                <span asp-validation-for="RegisterViewModel.UserName" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input asp-for="RegisterViewModel.EmailAddress" class="form-style" placeholder="Your Email" />
+                                                <span asp-validation-for="RegisterViewModel.EmailAddress" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input asp-for="RegisterViewModel.Password" class="form-style" placeholder="Your Password" />
+                                                <span asp-validation-for="RegisterViewModel.Password" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <input asp-for="RegisterViewModel.ConfirmPassword" class="form-style" placeholder="Confirm Password" />
+                                                <span asp-validation-for="RegisterViewModel.ConfirmPassword" class="text-danger"></span>
+                                            </div>
+                                            <button type="submit" class="btn mt-4">Register</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End card-back -->
+                        </div> <!-- End card-3d-wrapper -->
+                    </div> <!-- End card-3d-wrap -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 @section Scripts {
-	<script>
-		// Gerekirse JS ekleyebilirsiniz
-	</script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Optional JS
+    </script>
 }
 
 @section Styles {
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="~/css/login.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/login.css" />
 }

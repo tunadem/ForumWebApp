@@ -1,4 +1,6 @@
-﻿@model ForumWebApp.ViewModels.ProductDetailViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+@model ForumWebApp.ViewModels.ProductDetailViewModel
 
 @{
     ViewData["Title"] = Model?.Product?.Name ?? "Product Detail";
@@ -38,22 +40,16 @@
                         <p class="fs-5 mb-4">@Model.Product.Description</p>
                     </section>
                 </article>
+
                 <section class="mb-5">
                     <div class="card bg-light">
                         <div class="card-body">
                             <form asp-action="AddComment" asp-controller="Product" method="post">
                                 <input type="hidden" name="productId" value="@Model.Product.Id" />
-
-                                <!-- Title Input -->
                                 <input type="text" name="commentTitle" class="form-control mb-2" placeholder="Comment Title" required />
-
-                                <!-- Content Textarea -->
                                 <textarea class="form-control me-2" name="commentText" rows="3" placeholder="Write your comment..." required></textarea>
-
                                 <button type="submit" class="btn btn-primary align-self-start mt-2">Post Review</button>
                             </form>
-
-
 
                             @if (Model.Comments != null && Model.Comments.Any())
                             {
@@ -67,35 +63,40 @@
                                                     <div class="fw-bold">@comment.AppUser.UserName</div>
                                                     <div class="fw-semibold">@comment.Title</div>
                                                 </div>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@comment.Id" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        •••
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuButton-@comment.Id">
-                                                        <li><button class="dropdown-item" onclick="enableEdit(@comment.Id)">Edit</button></li>
-                                                        <form asp-action="DeleteComment" asp-controller="Product" method="post" style="display:inline;">
-                                                            <input type="hidden" name="id" value="@comment.Id" />
-                                                            <button type="submit" class="dropdown-item d-flex justify-content-center align-items-center"
-                                                                    style="background:none; border:none; width:100%; height:100%;">
-                                                                Delete
-                                                            </button>
-                                                        </form>
 
-
-
-
-                                                    </ul>
-                                                </div>
+                                                @if (comment.AppUserId == UserManager.GetUserId(User))
+                                                {
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@comment.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            •••
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuButton-@comment.Id">
+                                                            <li>
+                                                                <button class="dropdown-item" onclick="enableEdit(@comment.Id)">Edit</button>
+                                                            </li>
+                                                            <li>
+                                                                <form asp-action="DeleteComment" asp-controller="Product" method="post" style="display:inline;">
+                                                                    <input type="hidden" name="id" value="@comment.Id" />
+                                                                    <button type="submit" class="dropdown-item d-flex justify-content-center align-items-center"
+                                                                            style="background:none; border:none; width:100%; height:100%;">
+                                                                        Delete
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                }
                                             </div>
-                                            <div id="comment-content-@comment.Id">@comment.Content</div>
-                                            <form asp-action="EditComment" asp-controller="Product" method="post" id="edit-form-@comment.Id" class="d-none mt-2">
-    <input type="hidden" name="Id" value="@comment.Id" />
-    <input type="hidden" name="productId" value="@Model.Product.Id" />
-    <textarea name="Content" class="form-control mb-2">@comment.Content</textarea>
-    <button type="submit" class="btn btn-sm btn-success">Save</button>
-    <button type="button" class="btn btn-sm btn-secondary" onclick="cancelEdit(@comment.Id)">Cancel</button>
-</form>
 
+                                            <div id="comment-content-@comment.Id">@comment.Content</div>
+
+                                            <form asp-action="EditComment" asp-controller="Product" method="post" id="edit-form-@comment.Id" class="d-none mt-2">
+                                                <input type="hidden" name="Id" value="@comment.Id" />
+                                                <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                                <textarea name="Content" class="form-control mb-2">@comment.Content</textarea>
+                                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                                                <button type="button" class="btn btn-sm btn-secondary" onclick="cancelEdit(@comment.Id)">Cancel</button>
+                                            </form>
                                         </div>
                                     </div>
                                 }

@@ -72,7 +72,7 @@ namespace ForumWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> AddComment(int productId, string commentTitle, string commentText)
         {
-            var user = await _userRepository.GetFirstAsync();
+            var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
             await _productRepository.AddCommentToProductAsync(productId, user.Id, commentTitle, commentText);

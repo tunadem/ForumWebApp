@@ -19,42 +19,90 @@ namespace ForumWebApp.Controllers
         }
         public IActionResult Login()
         {
-            var response = new LoginViewModel();
-            return View(response);
+            var model = new LoginRegisterViewModel
+            {
+                LoginViewModel = new LoginViewModel(),
+                RegisterViewModel = new RegisterViewModel()
+            };
+            return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return View(loginViewModel);
+                var model = new LoginRegisterViewModel
+                {
+                    LoginViewModel = loginViewModel,
+                    RegisterViewModel = new RegisterViewModel()
+                };
+                return View("Login", model);
             }
+
             var user = await _userManager.FindByEmailAsync(loginViewModel.EmailAddress);
             if (user != null)
             {
-                //user exists
                 var passwordCheck = await _userManager.CheckPasswordAsync(user, loginViewModel.Password);
                 if (passwordCheck)
                 {
-                    //sign in
                     var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
                     if (result.Succeeded)
-                    {
                         return RedirectToAction("Index", "Home");
-                    }
-                    /*else
-                    {
-                        ModelState.AddModelError("", "Login failed. Please try again.");
-                        return View(loginViewModel);
-                    }*/
                 }
-                //password is incorrect
+
                 TempData["Error"] = "Invalid password. Please try again.";
-                return View(loginViewModel);
             }
-            //user not found
-            TempData["Error"] = "User not found. Please check your email address.";
-            return View(loginViewModel);
+            else
+            {
+                TempData["Error"] = "User not found. Please check your email address.";
+            }
+
+            var errorModel = new LoginRegisterViewModel
+            {
+                LoginViewModel = loginViewModel,
+                RegisterViewModel = new RegisterViewModel()
+            };
+
+            return View("Login", errorModel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(LoginRegisterViewModel model)
+        {
+            var registerViewModel = model.RegisterViewModel;
+
+            if (!ModelState.IsValid)
+            {
+                return View("Login", model);
+            }
+
+            var user = new AppUser
+            {
+                UserName = registerViewModel.UserName,
+                Email = registerViewModel.EmailAddress
+            };
+
+            var result = await _userManager.CreateAsync(user, registerViewModel.Password);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return View("Login", model);
+        }
+
+
+
+
+
+
     }
 }

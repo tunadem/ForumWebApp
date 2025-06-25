@@ -55,8 +55,8 @@
                 var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
             }
             <li class="nav-item">
-                <a href="/" class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
-                    Home
+                <a href="/account/login" class="nav-link text-white @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                    Login
                 </a>
             </li>
             <li>
